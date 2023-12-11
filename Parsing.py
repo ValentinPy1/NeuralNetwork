@@ -93,29 +93,39 @@ class Parsing():
     def __init__(self):
         self.check_mate = ([], [])
         self.board = ([], [])
+        self.data= ([], [])
         self.loadData()
         pass
 
     def loadData(self):
+        # fileBoard = [open("/home/Tumulus/ThirdYear/Math/B-CNA-500-BAR-5-1-neuralnetwork-thomas.laprie/datasets/datasets/boards/fen_10_pieces.txt", "r")]
+        # fileCheckMat = [open("/home/Tumulus/ThirdYear/Math/B-CNA-500-BAR-5-1-neuralnetwork-thomas.laprie/datasets/datasets/checkmate/fen_10_pieces.txt", "r")]
         fileBoard = [open("datasets/boards/fen_10_pieces.txt", "r"), open("datasets/boards/fen_20_pieces.txt", "r"), open("datasets/boards/fen_lots_pieces.txt", "r")]
         fileCheckMat = [open("datasets/checkmate/fen_10_pieces.txt", "r"), open("datasets/checkmate/fen_20_pieces.txt", "r"), open("datasets/checkmate/fen_lots_pieces.txt", "r")]
+        i = 0
         for board in fileBoard:
             for line in board:
-                self.board[0].append(FENtoBoard(line))
-                self.board[1].append([1,0,0,0])
-                break
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([1,0,0,0])
+                if i == 1:
+                    break
+                i += 1
+        i = 0
         for check in fileCheckMat:
             for line in check:
-                self.check_mate[0].append(FENtoBoard(line))
-                self.check_mate[1].append([0,1,0,0])
-                break
-        print(self.board)
-        print(self.check_mate)
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([0,1,0,0])
+                if i == 1:
+                    break
+                i += 1
 
     def getData(self, split):
-        data = self.board + self.check_mate
-        split_index = int(split * len(data))
-        np.random.shuffle(data)
-        training_data = data[:split_index]
-        testing_data = data[split_index:]
+        split_index = int(split * len(self.data))
+        training_data = (self.data[0][:split_index], self.data[1][:split_index])
+        testing_data = (self.data[0][split_index:], self.data[1][split_index:])
+        # print(training_data)
+        # print("--------------------------------------------------")
+        # print(testing_data)
+        # print("--------------------------------------------------")
+
         return (training_data, testing_data)
