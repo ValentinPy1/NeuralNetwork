@@ -105,22 +105,22 @@ class Parsing():
         i = 0
         for board in fileBoard:
             for line in board:
-                self.data[0].append(FENtoBoard(line))
-                self.data[1].append([1,0,0,0])
-                if i == 1:
+                if i >= 10:
                     break
                 i += 1
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([1,0,0,0])
         i = 0
         for check in fileCheckMat:
             for line in check:
-                self.data[0].append(FENtoBoard(line))
-                self.data[1].append([0,1,0,0])
-                if i == 1:
+                if i >= 10:
                     break
                 i += 1
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([0,1,0,0])
 
     def getData(self, split):
-        split_index = int(split * len(self.data))
+        split_index = int(split * len(self.data[0]))
         training_data = (self.data[0][:split_index], self.data[1][:split_index])
         testing_data = (self.data[0][split_index:], self.data[1][split_index:])
         # print(training_data)
@@ -128,4 +128,4 @@ class Parsing():
         # print(testing_data)
         # print("--------------------------------------------------")
 
-        return (testing_data, training_data)
+        return (training_data, testing_data)
