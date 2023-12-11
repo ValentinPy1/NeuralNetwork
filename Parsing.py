@@ -1,5 +1,6 @@
 import numpy as np
 import re
+from itertools import zip_longest
 
 
 # imgae(matrice) avec 7 chanel( 7 piece) et 3 etat (1 blanc, -1 noir, 0 vide)
@@ -87,6 +88,23 @@ def FENtoBoard(FEN):
     return board
 
 
+def AllFenToOne():
+    fileBoard = open("datasets/datasets/boards/fen_10_pieces.txt", "r")
+    file2 = open("datasets/datasets/boards/fen_20_pieces.txt", "r")
+    file3 = open("datasets/datasets/boards/fen_lots_pieces.txt", "r")
+    fileCheckMat = open("datasets/datasets/checkmate/fen_10_pieces.txt", "r")
+    file4 = open("datasets/datasets/checkmate/fen_20_pieces.txt", "r")
+    file7 = open("datasets/datasets/checkmate/fen_lots_pieces.txt", "r")
+
+    for line in zip_longest(fileBoard, fileCheckMat, file3, file7, file2, file4, fillvalue=''):
+        print(''.join(line), end='')
+
+
+def GetOnlyFen():
+    file = open("datasets/datasets/boards/lots_pieces.txt", "r")
+    for line in file:
+        if line[0] == 'F':
+            print(line, end='')
 
 
 class Parsing():
