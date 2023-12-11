@@ -91,24 +91,28 @@ def FENtoBoard(FEN):
 
 class Parsing():
     def __init__(self):
-        self.check_mate = []
-        self.board = []
+        self.check_mate = ([], [])
+        self.board = ([], [])
+        self.loadData()
         pass
 
     def loadData(self):
-        fileBoard = [open("datasets/boards/fen_lots_pieces.txt", "r")]
-        fileCheckMat = [open("datasets/checkmate/fen_lots_pieces.txt", "r")]
-        # fileBoard = [open("datasets/boards/10_pieces.txt", "r"), open("datasets/boards/20_pieces.txt", "r"), open("datasets/boards/lots_pieces.txt", "r")]
-        # fileCheckMat = [open("datasets/checkmate/10_pieces.txt", "r"), open("datasets/checkmate/20_pieces.txt", "r"), open("datasets/checkmate/lots_pieces.txt", "r")]
+        fileBoard = [open("datasets/boards/fen_10_pieces.txt", "r"), open("datasets/boards/fen_20_pieces.txt", "r"), open("datasets/boards/fen_lots_pieces.txt", "r")]
+        fileCheckMat = [open("datasets/checkmate/fen_10_pieces.txt", "r"), open("datasets/checkmate/fen_20_pieces.txt", "r"), open("datasets/checkmate/fen_lots_pieces.txt", "r")]
         for board in fileBoard:
             for line in board:
-                self.board.append((FENtoBoard(line), [1,0,0,0]))
+                self.board[0].append(FENtoBoard(line))
+                self.board[1].append([1,0,0,0])
+                break
         for check in fileCheckMat:
             for line in check:
-                    self.check_mate.append((FENtoBoard(line), [0,0,1,0]))
+                self.check_mate[0].append(FENtoBoard(line))
+                self.check_mate[1].append([0,1,0,0])
+                break
+        print(self.board)
+        print(self.check_mate)
 
     def getData(self, split):
-        self.loadData()
         data = self.board + self.check_mate
         split_index = int(split * len(data))
         np.random.shuffle(data)
