@@ -128,4 +128,4 @@ class Parsing():
         # print(testing_data)
         # print("--------------------------------------------------")
 
-        return (training_data, testing_data)
+        return (testing_data, training_data)
