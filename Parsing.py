@@ -105,7 +105,7 @@ class Parsing():
         i = 0
         for board in fileBoard:
             for line in board:
-                if i >= 10:
+                if i >= 10000:
                     break
                 i += 1
                 self.data[0].append(FENtoBoard(line))
@@ -113,7 +113,7 @@ class Parsing():
         i = 0
         for check in fileCheckMat:
             for line in check:
-                if i >= 10:
+                if i >= 10000:
                     break
                 i += 1
                 self.data[0].append(FENtoBoard(line))
