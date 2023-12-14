@@ -1,0 +1,8 @@
+site_name: My Docs
+
+nav:
+  - Home: index.md
+  - Layers: layers.md
+  - Activations: activations.md
+  - Losses: losses.md
+  - Model: model.md

@@ -70,6 +70,7 @@ def getCastle(castle):
     return result
 
 def FENtoBoard(FEN):
+    print(FEN)
     castle = getCastle(FEN.split(" ")[3])
     tour = FEN.split(" ")[2]
     FEN = FEN.split(" ")[1]
@@ -99,6 +100,12 @@ def AllFenToOne():
     for line in zip_longest(fileBoard, fileCheckMat, file3, file7, file2, file4, fillvalue=''):
         print(''.join(line), end='')
 
+def AddResFile():
+    file = open("datasets/datasets/checkmate/fen_10_pieces.txt", "r")
+    for line in file:
+        line = line[:-1]
+        line += " [0,1,0,0]"
+        print(line)
 
 def GetOnlyFen():
     file = open("datasets/datasets/boards/lots_pieces.txt", "r")
@@ -116,10 +123,11 @@ class Parsing():
         pass
 
     def loadData(self):
+        file = open("BigData")
         # fileBoard = [open("/home/Tumulus/ThirdYear/Math/B-CNA-500-BAR-5-1-neuralnetwork-thomas.laprie/datasets/datasets/boards/fen_10_pieces.txt", "r")]
         # fileCheckMat = [open("/home/Tumulus/ThirdYear/Math/B-CNA-500-BAR-5-1-neuralnetwork-thomas.laprie/datasets/datasets/checkmate/fen_10_pieces.txt", "r")]
-        fileBoard = [open("datasets/boards/fen_10_pieces.txt", "r"), open("datasets/boards/fen_20_pieces.txt", "r"), open("datasets/boards/fen_lots_pieces.txt", "r")]
-        fileCheckMat = [open("datasets/checkmate/fen_10_pieces.txt", "r"), open("datasets/checkmate/fen_20_pieces.txt", "r"), open("datasets/checkmate/fen_lots_pieces.txt", "r")]
+        # fileBoard = [open("datasets/boards/fen_10_pieces.txt", "r"), open("datasets/boards/fen_20_pieces.txt", "r"), open("datasets/boards/fen_lots_pieces.txt", "r")]
+        # fileCheckMat = [open("datasets/checkmate/fen_10_pieces.txt", "r"), open("datasets/checkmate/fen_20_pieces.txt", "r"), open("datasets/checkmate/fen_lots_pieces.txt", "r")]
         i = 0
         for board in fileBoard:
             for line in board:
