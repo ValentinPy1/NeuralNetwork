@@ -129,19 +129,21 @@ class Parsing():
         # fileBoard = [open("datasets/boards/fen_10_pieces.txt", "r"), open("datasets/boards/fen_20_pieces.txt", "r"), open("datasets/boards/fen_lots_pieces.txt", "r")]
         # fileCheckMat = [open("datasets/checkmate/fen_10_pieces.txt", "r"), open("datasets/checkmate/fen_20_pieces.txt", "r"), open("datasets/checkmate/fen_lots_pieces.txt", "r")]
         i = 0
-        for line in file:
-            if i >= 10:
-                break
-            i += 1
-            self.data[0].append(FENtoBoard(line))
-            self.data[1].append(line.split(" ")[7][:-1])
-        # for check in fileCheckMat:
-        #     for line in check:
-        #         if i >= 10:
-        #             break
-        #         i += 1
-        #         self.data[0].append(FENtoBoard(line))
-        #         self.data[1].append([0,1,0,0])
+        for board in fileBoard:
+            for line in board:
+                if i >= 10000:
+                    break
+                i += 1
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([1,0,0,0])
+        i = 0
+        for check in fileCheckMat:
+            for line in check:
+                if i >= 10000:
+                    break
+                i += 1
+                self.data[0].append(FENtoBoard(line))
+                self.data[1].append([0,1,0,0])
 
     def getData(self, split):
         split_index = int(split * len(self.data[0]))
