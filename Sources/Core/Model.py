@@ -28,7 +28,7 @@ class Model:
         self.train_acc = []
         self.test_acc = []
     
-    def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=True, progress_bar=False):
+    def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=False, progress_bar=False):
         test_count = x_test.shape[0]
         for epoch in range(epochs):
             perm = np.random.permutation(len(x_train))

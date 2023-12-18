@@ -20,12 +20,12 @@ def create_model_from_yaml(yaml_file):
     for layer in layers_config:
         for key, value in layer.items():
             if key == 'Input':
-                input_size, output_size = value[0], value[0]
+                input_size, output_size = value, value
             elif key == 'Dense':
                 input_size, output_size = output_size, value
-                layers.append(Dense({input_size}, {output_size}))
+                layers.append(Dense(input_size, output_size))
             elif key == 'Dropout':
-                layers.append(Dropout({value}))
+                layers.append(Dropout(value))
             elif key == 'Act':
                 if value == 'tanh':
                     layers.append(Tanh())
@@ -33,8 +33,6 @@ def create_model_from_yaml(yaml_file):
                     layers.append(Sigmoid())
                 elif value == 'relu':
                     layers.append(ReLU())
-            elif key == 'Dropout':
-                layers.append(f'Dropout({value})')
 
     # Define loss
     loss = model_config['loss']

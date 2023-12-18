@@ -1,15 +1,12 @@
 import numpy as np
 
 def parse_fen(fen):
-    """ Parse the FEN part of a line and return a numerical board representation,
-    castling rights, and player to move. """
     pieces = {'p': -1, 'n': -2, 'b': -3, 'r': -4, 'q': -5, 'k': -6,
               'P': 1, 'N': 2, 'B': 3, 'R': 4, 'Q': 5, 'K': 6}
 
     board, player, castling, _ = fen.split(' ')[0:4]
     board_matrix = np.zeros((8, 8), dtype=int)
 
-    # Fill the board matrix
     for i, row in enumerate(board.split('/')):
         col = 0
         for char in row:
@@ -19,8 +16,7 @@ def parse_fen(fen):
                 board_matrix[i, col] = pieces[char]
                 col += 1
 
-    # Castling rights
-    castling_rights = [0, 0, 0, 0] # [K, Q, k, q]
+    castling_rights = [0, 0, 0, 0]
     for char in castling:
         if char == 'K':
             castling_rights[0] = 1
@@ -61,14 +57,15 @@ def flatten(x):
     return x.reshape(x.shape[0], x.shape[1] * x.shape[2])
 
 def preprocess_data(x, y):
+    print("Encoding data...")
     x = one_hot_encode(x)
     x = flatten(x)
-    x_train = x.reshape(x.shape[0], x.shape[1])
-    y_train = y.reshape(y.shape[0], y.shape[1])
-    perm = np.random.permutation(len(x_train))
-    x_train = x_train[perm]
-    y_train = y_train[perm]
-    return x_train, y_train
+    x = x.reshape(x.shape[0], x.shape[1])
+    y = y.reshape(y.shape[0], y.shape[1])
+    perm = np.random.permutation(len(x))
+    x = x[perm]
+    y = y[perm]
+    return x, y
 
 def split_data(x, y, split):
     split_index = int(split * len(x))
@@ -76,13 +73,13 @@ def split_data(x, y, split):
     y_train, y_test = y[:split_index], y[split_index:]
     return x_train, y_train, x_test, y_test
 
-
 class Data:
     def __init__(self):
         self.data = {}
 
     def load(self, path, name):
         try:
+            print(f'Loading data from "{path}"...')
             x, y = load_chess_data(path)
         except FileNotFoundError:
             raise FileNotFoundError(f'File {path} not found.')

@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+import pickle as pkl
+import sys
+from Sources.DataLoader import Data
+
+# def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=False, progress_bar=False):
+#     test_count = x_test.shape[0]
+#     for epoch in range(epochs):
+#         perm = np.random.permutation(len(x_train))
+#         x_train = x_train[perm]
+#         y_train = y_train[perm]
+#         mean_loss = 0
+#         for i in tqdm(range(0, len(x_train), batch_size), disable=not progress_bar):
+#             x_batch = x_train[i:i+batch_size]
+#             y_batch = y_train[i:i+batch_size]
+#             output = self.network.forward(x_batch)
+#             loss = self.loss.loss(y_batch, output)
+#             mean_loss += loss
+#             loss_gradient = self.loss.gradient(y_batch, output)
+#             self.network.backward(loss_gradient, learning_rate)
+#             if early_stop > 0 and len(self.test_acc) > early_stop and self.test_acc[-1] <= self.test_acc[-early_stop]:
+#                 return
+#         mean_loss /= len(x_train) / batch_size
+#         self.train_loss.append(mean_loss)
+#         train_accu = self.test_accuracy(x_train[:test_count], y_train[:test_count])
+#         self.train_acc.append(train_accu)
+#         self.evaluate(x_test, y_test)
+#         if verbose:
+#             print(f"Epoch {epoch + 1} - Train loss: {round(self.train_loss[-1], 4)} - Test loss: {round(self.test_loss[-1], 4)} - Train acc: {round(self.train_acc[-1], 4)} - Test acc: {round(self.test_acc[-1], 4)}")
+
+
+usage = """
+Usage: ./trainer <model> <dataset> <epochs>
+    -s <split> (default: 0.9)
+        split the dataset into a training set and a validation set
+    -b <batch_size> (default: 64)
+    -l <learning_rate> (default: 0.001)
+    -e <early_stop> (default: 0)
+        stop training if test accuracy does not improve for <early_stop> epochs
+    -v (verbose)
+        print loss and accuracy after each epoch
+    -p (progress bar)
+        show progression during an epoch
+"""
+
+def main(argv):
+    if len(argv) < 4:
+        print(usage)
+        sys.exit(1)
+    model_file = argv[1]
+    dataset = argv[2]
+    epochs = int(argv[3])
+    split = 0.9
+    batch_size = 64
+    learning_rate = 0.001
+    early_stop = 0
+    verbose = False
+    progress_bar = False
+    for i in range(4, len(argv)):
+        if argv[i] == '-s':
+            split = float(argv[i+1])
+        elif argv[i] == '-b':
+            batch_size = int(argv[i+1])
+        elif argv[i] == '-l':
+            learning_rate = float(argv[i+1])
+        elif argv[i] == '-e':
+            early_stop = int(argv[i+1])
+        elif argv[i] == '-v':
+            verbose = True
+        elif argv[i] == '-p':
+            progress_bar = True
+    data = Data()
+    data.load(dataset, 'data')
+    data.split('data', split, 'train', 'test')
+    print()
+    x_train, y_train = data.get('train')
+    x_test, y_test = data.get('test')
+    with open(model_file, 'rb') as file:
+        model = pkl.load(file)
+    print(f'Loading model from "{model_file}"...')
+    acc = model.test_accuracy(x_test, y_test)
+    print(f'Initial accuracy: {acc}')
+    print()
+    print("Training...")
+    model.train(x_train, y_train, x_test, y_test, epochs, batch_size, learning_rate, early_stop, verbose, progress_bar)
+    model.save(model_file)
+
+if __name__ == '__main__':
+    main(sys.argv)
