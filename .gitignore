@@ -161,4 +161,4 @@ cython_debug/
 #.idea/
 data/
 datasources/
-models/trained/
+models/
