@@ -2,6 +2,7 @@ import time
 import pickle
 import numpy as np
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 from Sources.Core.Layers import Layer
 
@@ -86,6 +87,22 @@ class Model:
                 correct_predictions += 1
         accuracy = correct_predictions / len(x_test)
         return accuracy        
+
+    def plot_progress(self, title=""):
+        fig, ax1 = plt.subplots()
+        ax1.set_xlabel('Epoch')
+        ax1.set_ylabel('Loss')
+        ax1.plot(self.train_loss, color='tab:blue', linestyle='dashed')
+        ax1.plot(self.test_loss, color='tab:orange')
+        ax1.tick_params(axis='y')
+        ax2 = ax1.twinx()
+        ax2.set_ylabel('Accuracy')
+        ax2.plot(self.train_acc, color='tab:blue', linestyle='dashed')
+        ax2.plot(self.test_acc, color='tab:orange')
+        ax2.tick_params(axis='y')
+        plt.legend(["Train", "Test", "Train loss", "Test loss"], loc='upper left')
+        plt.title("Model accuracy and loss")
+        plt.show()
 
     def save(self, path):
         with open(path, "wb") as f:

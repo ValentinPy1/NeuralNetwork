@@ -14,8 +14,8 @@ Usage: ./trainer <model> <dataset> <epochs>
         stop training if test accuracy does not improve for <early_stop> epochs
     -v (verbose)
         print loss and accuracy after each epoch
-    -p (progress bar)
-        show progression during an epoch
+    -p (plot)
+        plot loss and accuracy after training
 """
 
 def main(argv):
@@ -30,6 +30,7 @@ def main(argv):
     learning_rate = 0.001
     early_stop = 0
     verbose = False
+    ploting = False
     for i in range(4, len(argv)):
         if argv[i] == '-s':
             split = float(argv[i+1])
@@ -42,7 +43,7 @@ def main(argv):
         elif argv[i] == '-v':
             verbose = True
         elif argv[i] == '-p':
-            progress_bar = True
+            ploting = True
     data = Data()
     data.load(dataset, 'data')
     data.split('data', split, 'train', 'test')
@@ -60,6 +61,7 @@ def main(argv):
     print("Training...")
     model.train(x_train, y_train, x_test, y_test, epochs, batch_size, learning_rate, early_stop, verbose)
     model.save(model_file)
+    model.plot_progress()
 
 if __name__ == '__main__':
     main(sys.argv)
