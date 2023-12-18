@@ -30,7 +30,6 @@ def main(argv):
     learning_rate = 0.001
     early_stop = 0
     verbose = False
-    ploting = False
     for i in range(4, len(argv)):
         if argv[i] == '-s':
             split = float(argv[i+1])
@@ -42,8 +41,6 @@ def main(argv):
             early_stop = int(argv[i+1])
         elif argv[i] == '-v':
             verbose = True
-        elif argv[i] == '-p':
-            ploting = True
     data = Data()
     data.load(dataset, 'data')
     data.split('data', split, 'train', 'test')

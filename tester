@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+
+import pickle as pkl
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+from Sources.DataLoader import Data
+from Sources.Core.Model import Model
+
+classnames = ["Checkmate", "Check", "Stalemate", "Nothing"]
+
+def cross_test(model, x_test, y_test):
+    pred_count = [0, 0, 0, 0]
+    correct_pred_count = [0, 0, 0, 0]
+    reality_count = [0, 0, 0, 0]
+    for x, y in zip(x_test, y_test):
+        pred = np.argmax(model.predict_one(x))
+        reality = np.argmax(y)
+        pred_count[pred] += 1
+        reality_count[reality] += 1
+        if pred == reality:
+            correct_pred_count[pred] += 1
+    for i in range(4):
+        print(f"Class: {classnames[i]}")
+        print(f"Reality: {reality_count[i]}")
+        print(f"Correct predictions: {correct_pred_count[i]}")
+        print(f"Total Predictions: {pred_count[i]}")
+        print(f"Accuracy: {round(correct_pred_count[i] / pred_count[i], 4)}")
+        print()
+    print(f"Total accuracy: {round(sum(correct_pred_count) / sum(pred_count), 4)}")
+
+def plot_confusion_matrix(model, x_test, y_test):
+    confusion_matrix = np.zeros((4, 4))
+    for x, y in zip(x_test, y_test):
+        pred = np.argmax(model.predict_one(x))
+        reality = np.argmax(y)
+        confusion_matrix[pred, reality] += 1
+    for i in range(4):
+        confusion_matrix[i] /= sum(confusion_matrix[i])
+        confusion_matrix[i] = [round(x * 100, 2) for x in confusion_matrix[i]]
+    fig, ax = plt.subplots()
+    im = ax.imshow(confusion_matrix, cmap='Purples')  # Set the colormap to 'Blues'
+    ax.set_xticks(np.arange(4))
+    ax.set_yticks(np.arange(4))
+    ax.set_xticklabels(classnames)
+    ax.set_yticklabels(classnames)
+    ax.set_xlabel('Reality')
+    ax.set_ylabel('Prediction')
+    for i in range(4):
+        for j in range(4):
+            text_color = 'black' if confusion_matrix[i, j] < 50 else 'w'
+            text = ax.text(j, i, confusion_matrix[i, j], ha='center', va='center', color=text_color)
+    ax.set_title('Confusion matrix')
+    fig.tight_layout()
+    plt.show()
+
+def main(argv):
+    if len(argv) < 3:
+        print('Usage: ./tester <model> <dataset>')
+        sys.exit(1)
+    model_file = argv[1]
+    dataset = argv[2]
+    data = Data()
+    data.load(dataset, 'data')
+    x_test, y_test = data.get('data')
+    print(f'Test set: {x_test.shape[0]} samples')
+    with open(model_file, 'rb') as file:
+        model = pkl.load(file)
+    print(f'Loading model from "{model_file}"...')
+    plot_confusion_matrix(model, x_test, y_test)
+    print()
+    cross_test(model, x_test, y_test)
+
+if __name__ == '__main__':
+    main(sys.argv)

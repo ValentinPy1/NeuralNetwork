@@ -1,5 +1,5 @@
 model:
-    name: 'my_model'
+    name: 'model'
     layers:
         - Input: 897
         - Dense: 200
