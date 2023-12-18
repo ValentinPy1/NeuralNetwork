@@ -6,3 +6,6 @@ nav:
   - Activations: activations.md
   - Losses: losses.md
   - Model: model.md
+  - Configuration: config.md
+  - Generator: generator.md
+  - Training: training.md
