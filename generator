@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+import yaml
+import sys
+from Sources.Core.Model import Model
+from Sources.Core.Layers import Dense, Dropout
+from Sources.Core.Activations import Tanh, Sigmoid, ReLU
+from Sources.Core.Losses import BinaryCrossEntropy, MeanSquaredError
+
+def create_model_from_yaml(yaml_file):
+    with open(yaml_file, 'r') as file:
+        config = yaml.safe_load(file)
+
+    model_config = config['model']
+    layers_config = model_config['layers']
+    
+    # Build the layers based on the config
+    layers = []
+    for layer in layers_config:
+        for key, value in layer.items():
+            if key == 'Input':
+                input_size, output_size = value[0], value[0]
+            elif key == 'Dense':
+                input_size, output_size = output_size, value
+                layers.append(Dense({input_size}, {output_size}))
+            elif key == 'Dropout':
+                layers.append(Dropout({value}))
+            elif key == 'Act':
+                if value == 'tanh':
+                    layers.append(Tanh())
+                elif value == 'sigmoid':
+                    layers.append(Sigmoid())
+                elif value == 'relu':
+                    layers.append(ReLU())
+            elif key == 'Dropout':
+                layers.append(f'Dropout({value})')
+
+    # Define loss
+    loss = model_config['loss']
+    if loss == 'binary_crossentropy':
+        loss_function = BinaryCrossEntropy()
+    elif loss == 'mse':
+        loss_function = MeanSquaredError()
+
+    model = Model(layers, loss_function)
+    return model
+
+def main(argv):
+    if len(argv) != 2:
+        print('Usage: ./generator <yaml_config>')
+        sys.exit(1)
+    yaml_file = argv[1]
+    model = create_model_from_yaml(yaml_file)
+    print(model)

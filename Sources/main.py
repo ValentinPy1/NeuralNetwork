@@ -1,11 +1,3 @@
-##
-## EPITECH PROJECT, 2023
-## B-CNA-500-BAR-5-1-neuralnetwork-thomas.laprie
-## File description:
-## main.py
-##
-
-
 import sys
 
 def usage():
@@ -65,7 +57,6 @@ def main(args):
         case _:
             print("error")
             exit(84)
-
 
 if __name__ == "__main__":
     main(sys.argv)

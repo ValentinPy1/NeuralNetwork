@@ -2,7 +2,7 @@
 import numpy as np
 import pickle
 from tqdm import tqdm
-from myTorch.Core.Layers import Layer
+from Sources.Core.Layers import Layer
 
 class Network(Layer):
     def __init__(self, layers):
@@ -20,18 +20,16 @@ class Network(Layer):
         return output_error
 
 class Model:
-    def __init__(self, network, loss, x_test, y_test):
+    def __init__(self, network, loss):
         self.network = Network(network)
         self.loss = loss
-        self.x_test = x_test
-        self.y_test = y_test
-        self.test_count = self.x_test.shape[0]
         self.train_loss = []
         self.test_loss = []
         self.train_acc = []
         self.test_acc = []
     
-    def train(self, x_train, y_train, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=True, progress_bar=False):
+    def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=True, progress_bar=False):
+        test_count = x_test.shape[0]
         for epoch in range(epochs):
             perm = np.random.permutation(len(x_train))
             x_train = x_train[perm]
@@ -49,10 +47,9 @@ class Model:
                     return
             mean_loss /= len(x_train) / batch_size
             self.train_loss.append(mean_loss)
-            train_accu = self.test_accuracy(x_train[:self.test_count], y_train[:self.test_count])
+            train_accu = self.test_accuracy(x_train[:test_count], y_train[:test_count])
             self.train_acc.append(train_accu)
-            self.evaluate(self.x_test, self.y_test)
-            
+            self.evaluate(x_test, y_test)
             if verbose:
                 print(f"Epoch {epoch + 1} - Train loss: {round(self.train_loss[-1], 4)} - Test loss: {round(self.test_loss[-1], 4)} - Train acc: {round(self.train_acc[-1], 4)} - Test acc: {round(self.test_acc[-1], 4)}")
     
