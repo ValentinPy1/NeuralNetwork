@@ -1,7 +1,8 @@
-
-import numpy as np
+import time
 import pickle
+import numpy as np
 from tqdm import tqdm
+
 from Sources.Core.Layers import Layer
 
 class Network(Layer):
@@ -28,14 +29,15 @@ class Model:
         self.train_acc = []
         self.test_acc = []
     
-    def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=False, progress_bar=False):
+    def train(self, x_train, y_train, x_test, y_test, epochs, batch_size=64, learning_rate=0.001, early_stop=0, verbose=False):
         test_count = x_test.shape[0]
         for epoch in range(epochs):
+            start_time = time.time()
             perm = np.random.permutation(len(x_train))
             x_train = x_train[perm]
             y_train = y_train[perm]
             mean_loss = 0
-            for i in tqdm(range(0, len(x_train), batch_size), disable=not progress_bar):
+            for i in tqdm(range(0, len(x_train), batch_size), disable=not verbose, leave=False):
                 x_batch = x_train[i:i+batch_size]
                 y_batch = y_train[i:i+batch_size]
                 output = self.network.forward(x_batch)
@@ -51,7 +53,8 @@ class Model:
             self.train_acc.append(train_accu)
             self.evaluate(x_test, y_test)
             if verbose:
-                print(f"Epoch {epoch + 1} - Train loss: {round(self.train_loss[-1], 4)} - Test loss: {round(self.test_loss[-1], 4)} - Train acc: {round(self.train_acc[-1], 4)} - Test acc: {round(self.test_acc[-1], 4)}")
+                elapsed_time = time.time() - start_time
+                print(f"Epoch {epoch + 1} - Train loss: {round(self.train_loss[-1], 4)} - Test loss: {round(self.test_loss[-1], 4)} - Train acc: {round(self.train_acc[-1], 4)} - Test acc: {round(self.test_acc[-1], 4)} ({round(elapsed_time, 2)}s)")
     
     def evaluate(self, x_test, y_test):
         total_loss = 0
