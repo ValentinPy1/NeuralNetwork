@@ -12,6 +12,7 @@ def create_model_from_yaml(yaml_file):
         config = yaml.safe_load(file)
 
     model_config = config['model']
+    name = model_config['name']
     layers_config = model_config['layers']
     
     # Build the layers based on the config
@@ -43,12 +44,15 @@ def create_model_from_yaml(yaml_file):
         loss_function = MeanSquaredError()
 
     model = Model(layers, loss_function)
-    return model
+    return model, name
 
 def main(argv):
     if len(argv) != 2:
         print('Usage: ./generator <yaml_config>')
         sys.exit(1)
     yaml_file = argv[1]
-    model = create_model_from_yaml(yaml_file)
-    print(model)
+    model, name = create_model_from_yaml(yaml_file)
+    model.save(name + '.pkl')
+
+if __name__ == '__main__':
+    main(sys.argv)

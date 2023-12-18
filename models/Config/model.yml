@@ -1,0 +1,12 @@
+model:
+    name: 'my_model'
+    layers:
+        - Input: [897]
+        - Dense: 200
+        - Act: 'tanh'
+        - Dropout: 0.5
+        - Dense: 100
+        - Act: 'tanh'
+        - Dense: 4
+        - Act: 'sigmoid'
+    loss: 'binary_crossentropy'
