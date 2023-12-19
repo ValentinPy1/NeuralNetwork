@@ -3,10 +3,8 @@ import numpy as np
 def parse_fen(fen):
     pieces = {'p': -1, 'n': -2, 'b': -3, 'r': -4, 'q': -5, 'k': -6,
               'P': 1, 'N': 2, 'B': 3, 'R': 4, 'Q': 5, 'K': 6}
-
     board, player, castling, _ = fen.split(' ')[0:4]
     board_matrix = np.zeros((8, 8), dtype=int)
-
     for i, row in enumerate(board.split('/')):
         col = 0
         for char in row:
@@ -15,7 +13,6 @@ def parse_fen(fen):
             else:
                 board_matrix[i, col] = pieces[char]
                 col += 1
-
     castling_rights = [0, 0, 0, 0]
     for char in castling:
         if char == 'K':
@@ -26,8 +23,6 @@ def parse_fen(fen):
             castling_rights[2] = 1
         elif char == 'q':
             castling_rights[3] = 1
-
-    # Player to move
     player_to_move = 1 if player == 'w' else -1
 
     return board_matrix, castling_rights, player_to_move

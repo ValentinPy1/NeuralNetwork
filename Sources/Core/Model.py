@@ -38,7 +38,7 @@ class Model:
             x_train = x_train[perm]
             y_train = y_train[perm]
             mean_loss = 0
-            for i in tqdm(range(0, len(x_train), batch_size), disable=not verbose, leave=False):
+            for i in tqdm(range(0, len(x_train), batch_size), ncols='50%', disable=not verbose, leave=False):
                 x_batch = x_train[i:i+batch_size]
                 y_batch = y_train[i:i+batch_size]
                 output = self.network.forward(x_batch)

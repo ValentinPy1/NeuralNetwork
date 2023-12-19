@@ -68,8 +68,8 @@ def main(argv):
         model = pkl.load(file)
     print(f'Loading model from "{model_file}"...')
     plot_confusion_matrix(model, x_test, y_test)
-    print()
-    cross_test(model, x_test, y_test)
+    # print()
+    # cross_test(model, x_test, y_test)
 
 if __name__ == '__main__':
     main(sys.argv)
